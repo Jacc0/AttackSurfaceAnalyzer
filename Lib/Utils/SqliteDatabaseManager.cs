@@ -339,9 +339,12 @@ namespace Microsoft.CST.AttackSurfaceAnalyzer.Utils
 
         public override int GetComparisonResultsCount(string? baseId, string compareId, string analysesHash, int resultType)
         {
-            _ = MainConnection ?? throw new NullReferenceException(Strings.Get("MainConnection"));
+            var mainConnection = MainConnection;
+            _ = mainConnection ?? throw new NullReferenceException(Strings.Get("MainConnection"));
+            var connection = mainConnection.Connection;
+            var transaction = mainConnection.Transaction;
             var result_count = 0;
-            using (var cmd = new SqliteCommand(GET_RESULT_COUNT, MainConnection.Connection, MainConnection.Transaction))
+            using (var cmd = new SqliteCommand(GET_RESULT_COUNT, connection, transaction))
             {
                 cmd.Parameters.AddWithValue("@first_run_id", baseId ?? string.Empty);
                 cmd.Parameters.AddWithValue("@second_run_id", compareId);

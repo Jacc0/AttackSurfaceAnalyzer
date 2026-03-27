@@ -1085,8 +1085,8 @@ namespace Microsoft.CST.AttackSurfaceAnalyzer.Cli
                                                 && (rule.Platforms == null || rule.Platforms.Contains(platform))
                                                 && (rule.ResultType == res.ResultType));
                                         res.Rules = analyzer.Analyze(selectedRules, res.Base, res.Compare).ToList();
-                                        res.Analysis = res.Rules.Count
-                                                       > 0 ? res.Rules.Max(x => ((AsaRule)x).Flag) : opts.AnalysesFile.DefaultLevels[res.ResultType];
+                                        res.Analysis = res.Rules.Count > 0 ? res.Rules.Max(x => ((AsaRule)x).Flag) : 
+                                            (opts.AnalysesFile.DefaultLevels.ContainsKey(res.ResultType) ? opts.AnalysesFile.DefaultLevels[res.ResultType] : ANALYSIS_RESULT_TYPE.INFORMATION);
                                         res.AnalysesHash = analysesHash;
                                     });
                                 }
