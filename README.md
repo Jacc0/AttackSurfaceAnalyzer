@@ -1,4 +1,8 @@
-# Attack Surface Analyzer 
+# AI modiefied  Attack Surface Analyzer 
+
+It now has a tree view to browse the report results:
+<img width="924" height="704" alt="image" src="https://github.com/user-attachments/assets/545117ca-acc9-43ed-b90a-036d74697c06" />
+
 Attack Surface Analyzer is a [Microsoft](https://github.com/microsoft/) developed open source security tool that analyzes the attack 
 surface of a target system and reports on potential security vulnerabilities introduced during
 the installation of software or system misconfiguration. 
