@@ -314,15 +314,15 @@ namespace Microsoft.CST.AttackSurfaceAnalyzer.Collectors
             }
             try
             {
-                List<string> lines = new List<string>(ExternalCommandRunner.RunExternalCommand("net", "localgroup").Split('\n'));
-
-                lines.RemoveRange(0, 4);
+                var netPath = Path.Combine(Environment.SystemDirectory, "net.exe");
+                var rawResult = ExternalCommandRunner.RunExternalCommand(netPath, "localgroup");
+                List<string> lines = new List<string>(rawResult.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries));
 
                 foreach (string line in lines)
                 {
                     if (cancellationToken.IsCancellationRequested) { break; }
 
-                    if (line.Contains('*'))
+                    if (line.StartsWith("*"))
                     {
                         var groupName = line.Substring(1).Trim();
                         var group = GetGroup(groupName);
@@ -333,8 +333,7 @@ namespace Microsoft.CST.AttackSurfaceAnalyzer.Collectors
 
                             //Get the members of the group
                             var args = $"/Node:\"{Environment.MachineName}\" path win32_groupuser where (groupcomponent=\"win32_group.name=\\\"{groupName}\\\",domain=\\\"{Environment.MachineName}\\\"\")";
-                            List<string> lines_int = new List<string>(ExternalCommandRunner.RunExternalCommand("wmic", args).Split('\n'));
-                            lines_int.RemoveRange(0, 1);
+                            List<string> lines_int = new List<string>(ExternalCommandRunner.RunExternalCommand("wmic", args).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries));
 
                             foreach (string line_int in lines_int)
                             {
