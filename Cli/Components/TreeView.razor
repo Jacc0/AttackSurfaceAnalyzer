@@ -1,0 +1,47 @@
+@using Microsoft.CST.AttackSurfaceAnalyzer.Objects
+@using Microsoft.CST.AttackSurfaceAnalyzer.Cli.Objects
+
+@if (Node != null)
+{
+    <li>
+        @if (Node.Children.Any())
+        {
+            <span class="tree-node @(Node.IsExpanded ? "expanded" : "collapsed")" @onclick="Toggle">
+                <span class="oi @(Node.IsExpanded ? "oi-chevron-bottom" : "oi-chevron-right")" aria-hidden="true"></span>
+                <span class="oi oi-folder" aria-hidden="true"></span> @Node.Name
+            </span>
+            @if (Node.IsExpanded)
+            {
+                <ul class="tree-list">
+                    @foreach (var child in Node.Children.Values.OrderBy(x => x.Children.Any() ? 0 : 1).ThenBy(x => x.Name))
+                    {
+                        <TreeView Node="child" OnSelected="OnSelected" />
+                    }
+                </ul>
+            }
+        }
+        else
+        {
+            <span class="tree-node file-node" @onclick="() => OnSelected.InvokeAsync(Node.Result)">
+                <span class="oi oi-file" aria-hidden="true"></span> @Node.Name
+                <span class="badge badge-secondary ml-2">@Node.Result?.ChangeType</span>
+            </span>
+        }
+    </li>
+}
+
+@code {
+    [Parameter]
+    public TreeNode? Node { get; set; }
+
+    [Parameter]
+    public EventCallback<CompareResult> OnSelected { get; set; }
+
+    private void Toggle()
+    {
+        if (Node != null)
+        {
+            Node.IsExpanded = !Node.IsExpanded;
+        }
+    }
+}
